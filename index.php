@@ -3,12 +3,18 @@ include_once("config.php");
 
 // Mengambil data dari database
 $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
+
+// Menghitung total seluruh alat elektromedis
+$total_alat = mysqli_num_rows($result);
+
+// Menghitung total alat yang berada di Poli (Contoh statistik dinamis)
+$result_poli = mysqli_query($mysqli, "SELECT * FROM alat WHERE lokasi LIKE '%poli%'");
+$total_poli = mysqli_num_rows($result_poli);
 ?>
 
 <html>
 <head>    
-    <title>SIM RS - Alat Elektromedis</title>
-    <!-- Menambahkan Font Google (Inter) & FontAwesome untuk ikon gratisan -->
+    <title>SIM RS - Data Alat Elektromedis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +34,13 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            /* Tambahan animasi smooth fade-in saat halaman dibuka */
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Card Atas untuk Nama dan Judul */
@@ -40,10 +53,13 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .header-text {
             color: white;
+            z-index: 2;
         }
 
         .nama-user {
@@ -62,6 +78,23 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
             color: #ffffff;
         }
 
+        /* Elemen Gambar Medis Tambahan */
+        .header-illustration {
+            position: absolute;
+            right: 220px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 100px;
+            opacity: 0.85;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .header-illustration img {
+            height: 100%;
+            object-fit: contain;
+        }
+
         /* Tombol Tambah Alat Modern */
         .btn-tambah {
             background-color: #10b981;
@@ -76,12 +109,57 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
             gap: 8px;
             box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
             transition: all 0.2s ease;
+            z-index: 2;
         }
         .btn-tambah:hover {
             background-color: #059669;
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
+
+        /* STYLING KOTAK STATISTIK (BARU) */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-info .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        /* Variasi Warna Icon Ringkasan */
+        .icon-blue { background-color: #e0f2fe; color: #0284c7; }
+        .icon-green { background-color: #d1fae5; color: #059669; }
+        .icon-orange { background-color: #ffedd5; color: #ea580c; }
 
         /* Desain Tabel Premium */
         .table-responsive {
@@ -185,16 +263,51 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
 
 <body>
     <div class="container">
-        <!-- HEADER DASHBOARD BARU -->
         <div class="dashboard-header">
             <div class="header-text">
                 <div class="nama-user">Sistem Informasi Manajemen RS</div>
                 <h1 class="title"><i class="fa-solid fa-heart-pulse"></i> Data Alat Elektromedis</h1>
             </div>
+            
+            <div class="header-illustration">
+                <img src="https://img.icons8.com/illustrations/colorful/160/medical-doctor.png" alt="Medical Illustration">
+            </div>
+
             <a href="add.php" class="btn-tambah"><i class="fa-solid fa-plus"></i> Tambah Alat</a>
         </div>
 
-        <!-- TABEL DATA -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Total Inventaris Alat</div>
+                    <h2 class="stat-value"><?php echo $total_alat; ?> <span style="font-size: 14px; font-weight: normal; color: #64748b;">Unit</span></h2>
+                </div>
+                <div class="stat-icon icon-blue">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Total di Area Poli</div>
+                    <h2 class="stat-value"><?php echo $total_poli; ?> <span style="font-size: 14px; font-weight: normal; color: #64748b;">Unit</span></h2>
+                </div>
+                <div class="stat-icon icon-orange">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <div class="stat-label">Status Database</div>
+                    <h2 class="stat-value" style="color: #059669; font-size: 22px;">Terhubung</h2>
+                </div>
+                <div class="stat-icon icon-green">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+
         <div class="table-responsive">
             <table>
                 <tr class="header">
@@ -213,7 +326,6 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
                     echo "<td><strong>".$user_data['nama_alat']."</strong></td>";
                     echo "<td>".$user_data['tahun']."</td>";
                     echo "<td>".$user_data['merek']."</td>";    
-                    // Lokasi dibungkus badge otomatis
                     echo "<td><span class='badge-lokasi'>".$user_data['lokasi']."</span></td>";    
                     echo "<td>
                             <a href='edit.php?id=$user_data[id]' class='btn-action btn-edit'><i class='fa-regular fa-pen-to-square'></i> Edit</a>
@@ -226,7 +338,6 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
             </table>
         </div>
         
-        <!-- FOOTER UNTUK IDENTITAS KAMU -->
         <p style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: 25px; font-weight: 500;">
             Aplikasi dikembangkan oleh: <strong>Lusyana Dian Afrita Sari</strong>
         </p>
