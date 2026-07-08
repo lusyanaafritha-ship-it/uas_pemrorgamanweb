@@ -126,6 +126,9 @@ $result = mysqli_query($mysqli, "SELECT * FROM alat ORDER BY id DESC");
 </head>
 
 <body>
+    <!-- Tambahkan baris kode nama di bawah ini -->
+    <div class="nama-user">Lusyana Dian Afrita Sari</div>
+    
     <b class="title">Data Alat Elektromedis</b>
     <a href="add.php" class="btn-tambah">+ Tambah Alat</a>
 
