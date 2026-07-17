@@ -21,6 +21,27 @@ $total_poli = mysqli_num_rows($result_poli);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style type="text/css">
+        /* Header sebelah kiri */
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+/* Foto Profil */
+.profile-photo{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid white;
+    box-shadow:0 4px 12px rgba(0,0,0,.3);
+    transition:0.3s;
+}
+
+.profile-photo:hover{
+    transform:scale(1.08);
+}
         /* Menggunakan font Inter standar aplikasi modern */
         body {
             font-family: 'Inter', sans-serif;
@@ -264,14 +285,18 @@ $total_poli = mysqli_num_rows($result_poli);
 <body>
     <div class="container">
         <div class="dashboard-header">
+
+        <img src="image/LogoUMPKU.png"
+             alt="Logo UMPKU"
+             class="profile-photo">
+             
             <div class="header-text">
-                <div class="nama-user">Sistem Informasi Manajemen RS</div>
+                <div class="nama-user">LUSYANA DIAN AFRITA SARI</div>
                 <h1 class="title"><i class="fa-solid fa-heart-pulse"></i> Data Alat Elektromedis</h1>
             </div>
             
-            <div class="header-illustration">
-                <img src="https://img.icons8.com/illustrations/colorful/160/medical-doctor.png" alt="Medical Illustration">
-            </div>
+           
+           
 
             <a href="add.php" class="btn-tambah"><i class="fa-solid fa-plus"></i> Tambah Alat</a>
         </div>
