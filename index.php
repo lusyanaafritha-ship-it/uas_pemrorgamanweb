@@ -21,27 +21,6 @@ $total_poli = mysqli_num_rows($result_poli);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style type="text/css">
-        /* Header sebelah kiri */
-.header-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-/* Foto Profil */
-.profile-photo{
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    object-fit:cover;
-    border:3px solid white;
-    box-shadow:0 4px 12px rgba(0,0,0,.3);
-    transition:0.3s;
-}
-
-.profile-photo:hover{
-    transform:scale(1.08);
-}
         /* Menggunakan font Inter standar aplikasi modern */
         body {
             font-family: 'Inter', sans-serif;
@@ -55,7 +34,6 @@ $total_poli = mysqli_num_rows($result_poli);
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            /* Tambahan animasi smooth fade-in saat halaman dibuka */
             animation: fadeIn 0.6s ease-out;
         }
 
@@ -78,9 +56,31 @@ $total_poli = mysqli_num_rows($result_poli);
             overflow: hidden;
         }
 
+        /* Header sebelah kiri */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            z-index: 2;
+        }
+
+        /* Foto Profil / Logo */
+        .profile-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,.3);
+            transition: 0.3s;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.08);
+        }
+
         .header-text {
             color: white;
-            z-index: 2;
         }
 
         .nama-user {
@@ -99,21 +99,29 @@ $total_poli = mysqli_num_rows($result_poli);
             color: #ffffff;
         }
 
-        /* Elemen Gambar Medis Tambahan */
-        .header-illustration {
-            position: absolute;
-            right: 220px;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 100px;
-            opacity: 0.85;
-            z-index: 1;
-            pointer-events: none;
+        /* Header sebelah kanan */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 2;
         }
-        
-        .header-illustration img {
-            height: 100%;
-            object-fit: contain;
+
+        .datetime {
+            color: white;
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        #tanggal {
+            font-weight: 600;
+        }
+
+        #jam {
+            font-size: 15px;
+            color: #dbeafe;
         }
 
         /* Tombol Tambah Alat Modern */
@@ -130,7 +138,6 @@ $total_poli = mysqli_num_rows($result_poli);
             gap: 8px;
             box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
             transition: all 0.2s ease;
-            z-index: 2;
         }
         .btn-tambah:hover {
             background-color: #059669;
@@ -138,7 +145,7 @@ $total_poli = mysqli_num_rows($result_poli);
             box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
 
-        /* STYLING KOTAK STATISTIK (BARU) */
+        /* STYLING KOTAK STATISTIK */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -284,23 +291,30 @@ $total_poli = mysqli_num_rows($result_poli);
 
 <body>
     <div class="container">
+        <!-- HEADER DASHBOARD -->
         <div class="dashboard-header">
-
-        <img src="image/LogoUMPKU.png"
-             alt="Logo UMPKU"
-             class="profile-photo">
-             
-            <div class="header-text">
-                <div class="nama-user">LUSYANA DIAN AFRITA SARI</div>
-                <h1 class="title"><i class="fa-solid fa-heart-pulse"></i> Data Alat Elektromedis</h1>
+            
+            <!-- Kiri: Logo dan Judul (Sudah dibungkus div) -->
+            <div class="header-left">
+                <img src="image/LogoUMPKU.png" alt="Logo UMPKU" class="profile-photo">
+                <div class="header-text">
+                    <div class="nama-user">LUSYANA DIAN AFRITA SARI</div>
+                    <h1 class="title"><i class="fa-solid fa-heart-pulse"></i> Data Alat Elektromedis</h1>
+                </div>
             </div>
             
-           
-           
+            <!-- Kanan: Tanggal/Jam dan Tombol -->
+            <div class="header-right">
+                <div class="datetime">
+                    <div id="tanggal"></div>
+                    <div id="jam"></div>
+                </div> 
+                <a href="add.php" class="btn-tambah"><i class="fa-solid fa-plus"></i> Tambah Alat</a>
+            </div>
 
-            <a href="add.php" class="btn-tambah"><i class="fa-solid fa-plus"></i> Tambah Alat</a>
         </div>
 
+        <!-- STATISTIK -->
         <div class="stats-container">
             <div class="stat-card">
                 <div class="stat-info">
@@ -333,6 +347,7 @@ $total_poli = mysqli_num_rows($result_poli);
             </div>
         </div>
 
+        <!-- TABEL DATA -->
         <div class="table-responsive">
             <table>
                 <tr class="header">
@@ -345,7 +360,7 @@ $total_poli = mysqli_num_rows($result_poli);
                 </tr>
                 <?php  
                 $i = 1;
-                while($user_data = mysqli_fetch_array($result)) {         
+                while($user_data = mysqli_fetch_array($result)) {        
                     echo "<tr>";
                     echo "<td><span style='color: #94a3b8; font-weight: bold;'>#".$i."</span></td>";
                     echo "<td><strong>".$user_data['nama_alat']."</strong></td>";
@@ -367,5 +382,22 @@ $total_poli = mysqli_num_rows($result_poli);
             Aplikasi dikembangkan oleh: <strong>Lusyana Dian Afrita Sari</strong>
         </p>
     </div>
+
+<script>
+function updateDateTime(){
+    const sekarang = new Date();
+    const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    let tanggal = hari[sekarang.getDay()] + ", " + sekarang.getDate() + " " + bulan[sekarang.getMonth()] + " " + sekarang.getFullYear();
+    let jam = sekarang.toLocaleTimeString('id-ID') + " WIB";
+
+    document.getElementById("tanggal").innerHTML = tanggal;
+    document.getElementById("jam").innerHTML = jam;
+}
+
+updateDateTime();
+setInterval(updateDateTime,1000);
+</script>
 </body>
 </html>
